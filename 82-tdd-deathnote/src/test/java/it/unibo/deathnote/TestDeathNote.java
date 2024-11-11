@@ -64,17 +64,26 @@ class TestDeathNote {
         assertFalse(this.deathNote.isNameWritten(HUMAN_NAME));
         this.deathNote.writeName(HUMAN_NAME);
         assertTrue(this.deathNote.isNameWritten(HUMAN_NAME));
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenWritingNullName() {
         // null name should throw exception
         assertThrows(
                 NullPointerException.class,
                 () -> this.deathNote.writeName(null));
-        // empty or blank test should not be written
-        final String emptyHumanName = "";
-        this.deathNote.writeName(emptyHumanName);
-        assertFalse(this.deathNote.isNameWritten(emptyHumanName));
+    }
+
+    public void shouldRejectBlankName() {
         final String blankHumanName = "  ";
         this.deathNote.writeName(blankHumanName);
         assertFalse(this.deathNote.isNameWritten(blankHumanName));
+    }
+
+    public void shouldRejectEmptyName() {
+        final String emptyHumanName = "";
+        this.deathNote.writeName(emptyHumanName);
+        assertFalse(this.deathNote.isNameWritten(emptyHumanName));
     }
 
     /*
@@ -117,7 +126,7 @@ class TestDeathNote {
         this.deathNote.writeName(HUMAN_NAME_02);
         Thread.sleep(100);
         assertFalse(this.deathNote.writeDeathCause(causeOfDeath));
-        assertEquals(DEFAULT_CAUSE_OF_DEATH, this.deathNote.getDeathCause(HUMAN_NAME));
+        assertEquals(DEFAULT_CAUSE_OF_DEATH, this.deathNote.getDeathCause(HUMAN_NAME_02));
     }
 
     /*
@@ -150,12 +159,9 @@ class TestDeathNote {
         // add first human
         this.deathNote.writeName(HUMAN_NAME);
         this.deathNote.writeDetails(detailsOfDeath);
-
         // add new human waiting too much
         this.deathNote.writeName(HUMAN_NAME_02);
-
         Thread.sleep(6100);
-
         assertFalse(this.deathNote.writeDetails(detailsOfDeath));
         assertEquals("", this.deathNote.getDeathDetails(HUMAN_NAME_02));
     }
